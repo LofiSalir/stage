@@ -1,5 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, router } from '@inertiajs/react';
+import { useEffect } from 'react';
 
 export default function Index({ auth, orders }) {
     const handleStatusUpdate = (orderId, newStatus) => {
@@ -7,6 +8,18 @@ export default function Index({ auth, orders }) {
             preserveScroll: true,
         });
     };
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            router.reload({ 
+                only: ['orders'], 
+                preserveScroll: true,
+                preserveState: true
+            });
+        }, 5000);
+
+        return () => clearInterval(interval);
+    }, []);
 
     const getStatusColor = (status) => {
         switch (status) {
@@ -53,7 +66,11 @@ export default function Index({ auth, orders }) {
                                 <div className="bg-slate-50 border-b border-slate-200 p-4 sm:px-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                     <div>
                                         <div className="flex items-center gap-3 mb-1">
-                                            <h3 className="text-lg font-bold text-slate-800">Commande #{order.id}</h3>
+                                            <div className="flex items-center gap-2">
+                                                <span className="bg-slate-800 text-white px-2 py-1 rounded-md text-xs font-mono font-bold tracking-wider">
+                                                    REF-{order.id.toString().padStart(4, '0')}
+                                                </span>
+                                            </div>
                                             <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${getStatusColor(order.status)}`}>
                                                 {getStatusLabel(order.status)}
                                             </span>

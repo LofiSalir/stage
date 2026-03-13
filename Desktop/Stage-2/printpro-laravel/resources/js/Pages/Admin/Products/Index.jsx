@@ -1,5 +1,6 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, router } from '@inertiajs/react';
+import { useEffect } from 'react';
 
 export default function Index({ auth, products }) {
     const { delete: destroy } = useForm();
@@ -9,6 +10,18 @@ export default function Index({ auth, products }) {
             destroy(route('admin.products.destroy', id));
         }
     };
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            router.reload({ 
+                only: ['products'], 
+                preserveScroll: true,
+                preserveState: true
+            });
+        }, 5000);
+
+        return () => clearInterval(interval);
+    }, []);
 
     return (
         <AuthenticatedLayout

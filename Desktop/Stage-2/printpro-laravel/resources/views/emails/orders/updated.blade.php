@@ -22,12 +22,29 @@
             <p>Nous préparons actuellement vos articles pour l'expédition. Vous recevrez une autre notification une fois que votre commande sera expédiée.</p>
 
             <h3>Détails de la commande :</h3>
-            <ul>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
                 @foreach($order->items as $item)
-                    <li>{{ $item->quantity }}x {{ $item->product ? $item->product->name : 'Produit inconnu' }}</li>
+                    <tr style="border-bottom: 1px solid #edf2f7;">
+                        <td style="padding: 10px 0; width: 60px;">
+                            @if($item->product && $item->product->image)
+                                <img src="{{ $item->product->image }}" alt="{{ $item->product->name }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;">
+                            @else
+                                <div style="width: 50px; height: 50px; background-color: #f1f5f9; border-radius: 8px; text-align: center; line-height: 50px; color: #cbd5e1;">Logo</div>
+                            @endif
+                        </td>
+                        <td style="padding: 10px; vertical-align: middle;">
+                            <span style="font-weight: bold; color: #1e293b;">{{ $item->product ? $item->product->name : 'Produit inconnu' }}</span><br>
+                            <span style="font-size: 13px; color: #64748b;">Quantité : {{ $item->quantity }}</span>
+                        </td>
+                        <td style="padding: 10px; text-align: right; vertical-align: middle; font-weight: bold; color: #1e293b;">
+                            {{ number_format($item->price * $item->quantity, 2) }} MAD
+                        </td>
+                    </tr>
                 @endforeach
-            </ul>
-            <p><strong>Montant Total :</strong> {{ number_format($order->total, 2) }} MAD</p>
+            </table>
+            <div style="margin-top: 20px; text-align: right; border-top: 2px solid #e2e8f0; padding-top: 10px;">
+                <p style="font-size: 18px; font-weight: bold; color: #2563eb;">Total : {{ number_format($order->total, 2) }} MAD</p>
+            </div>
 
             <p style="text-align: center; margin-top: 30px;">
                 <a href="{{ url('/') }}" class="button" style="color: white !important;">Visiter notre boutique</a>
